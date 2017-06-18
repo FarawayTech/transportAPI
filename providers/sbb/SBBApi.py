@@ -1,5 +1,6 @@
 import os
 import requests
+from collections import defaultdict
 from dateutil import tz
 from providers.Api import Api
 from xml.etree import ElementTree
@@ -16,6 +17,7 @@ class SBBApi(Api):
 
     def _parse_response(self, response_xml: ElementTree.Element) -> dict:
         response = {'departures': []}
+        departures = defaultdict(list)
 
         for departure in response_xml.iterfind('.//default:StopEvent', self.NS):
             dep_time = departure.find(".//default:TimetabledTime", self.NS).text
@@ -26,13 +28,17 @@ class SBBApi(Api):
             destination_lang = departure.find(".//default:DestinationText/default:Language", self.NS).text
 
             line_name = departure.find(".//default:PublishedLineName/default:Text", self.NS).text  # can be empty for trains
-            response['departures'].append({'dep_time': dep_time,
-                                           'destination': {'name': destination_name,
-                                                           'lang': destination_lang,
-                                                           'id': destination_id},
-                                           'transport': {'type': transport_type,
-                                                         'name': transport_name,
-                                                         'line': line_name}})
+            departures[destination_id].append({'dep_time': dep_time,
+                                               'destination': {'name': destination_name,
+                                                               'lang': destination_lang,
+                                                               'id': destination_id},
+                                               'transport': {'type': transport_type,
+                                                             'name': transport_name,
+                                                             'line': line_name}})
+        for key, value in departures.items():
+            connections = {'destination': {'id': key, 'name': value[0]['destination']['name']},
+                           'connections': value}
+            response['departures'].append(connections)
         return response
 
     def get_departures(self, station_id, time: datetime):
