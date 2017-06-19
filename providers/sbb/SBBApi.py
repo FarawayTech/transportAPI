@@ -36,7 +36,8 @@ class SBBApi(Api):
                                                              'name': transport_name,
                                                              'line': line_name}})
         for key, value in departures.items():
-            connections = {'destination': {'id': key, 'name': value[0]['destination']['name']},
+            connections = {'destination': {'id': key, 'name': value[0]['destination']['name'],
+                                           'lang': value[0]['destination']['lang']},
                            'connections': value}
             response['departures'].append(connections)
         return response
