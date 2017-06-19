@@ -25,7 +25,7 @@ class SBBApi(Api):
             transport_type = departure.find(".//default:Mode/default:PtMode", self.NS).text
             destination_name = departure.find(".//default:DestinationText/default:Text", self.NS).text
             destination_id = departure.find(".//default:DestinationStopPointRef", self.NS).text
-            destination_lang = departure.find(".//default:DestinationText/default:Language", self.NS).text
+            destination_lang = departure.find(".//default:DestinationText/default:Language", self.NS).text.lower()
 
             line_name = departure.find(".//default:PublishedLineName/default:Text", self.NS).text  # can be empty for trains
             departures[destination_id].append({'dep_time': dep_time,
@@ -43,7 +43,7 @@ class SBBApi(Api):
         return response
 
     def get_departures(self, station_id, time: datetime):
-        time = time.replace(tzinfo=TIMEZONE)
+        time = time.astimezone(TIMEZONE)
         request_xml = ElementTree.parse('providers/sbb/departures_request.xml').getroot()  # type: ElementTree.Element
         # there is always only one
         stop = request_xml.find(".//default:StopPointRef", self.NS)

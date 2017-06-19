@@ -2,6 +2,7 @@ from wsgiref import simple_server
 import falcon
 import json
 from datetime import datetime
+from dateutil import tz
 
 from providers import get_api
 
@@ -10,7 +11,7 @@ class DeparturesResource:
 
     def on_get(self, req, resp):
         """Handles GET requests"""
-        dep_time = req.get_param('time') or datetime.utcnow()
+        dep_time = req.get_param('time') or datetime.now(tz.gettz('UTC'))
         station_id = req.get_param('station_id') or None
         if station_id is None:
             raise falcon.HTTPBadRequest('Station ID is none',
