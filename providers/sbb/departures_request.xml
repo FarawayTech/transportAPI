@@ -17,7 +17,7 @@
                     <NumberOfResults>10</NumberOfResults>
                     <StopEventType>departure</StopEventType>
                     <IncludePreviousCalls>false</IncludePreviousCalls>
-                    <IncludeOnwardCalls>false</IncludeOnwardCalls>
+                    <IncludeOnwardCalls>true</IncludeOnwardCalls>
                     <IncludeRealtimeData>true</IncludeRealtimeData>
                 </Params>
             </StopEventRequest>

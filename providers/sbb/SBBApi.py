@@ -20,7 +20,7 @@ class SBBApi(Api):
         departures = defaultdict(list)
 
         for departure in response_xml.iterfind('.//default:StopEvent', self.NS):
-            dep_time = departure.find(".//default:TimetabledTime", self.NS).text
+            dep_time = departure.find(".//default:ThisCall//default:TimetabledTime", self.NS).text
             transport_name = departure.find(".//default:Mode/default:Name/default:Text", self.NS).text
             transport_type = departure.find(".//default:Mode/default:PtMode", self.NS).text
             destination_name = departure.find(".//default:DestinationText/default:Text", self.NS).text
@@ -28,13 +28,21 @@ class SBBApi(Api):
             destination_lang = departure.find(".//default:DestinationText/default:Language", self.NS).text.lower()
 
             line_name = departure.find(".//default:PublishedLineName/default:Text", self.NS).text  # can be empty for trains
+
+            stations = []
+            for station in departure.iterfind('.//default:OnwardCall', self.NS):
+                station_id = station.find(".//default:StopPointRef", self.NS).text
+                station_name = station.find(".//default:StopPointName/default:Text", self.NS).text
+                stations.append({"name": station_name, "id": station_id})
+
             departures[destination_id].append({'dep_time': dep_time,
                                                'destination': {'name': destination_name,
                                                                'lang': destination_lang,
                                                                'id': destination_id},
                                                'transport': {'type': transport_type,
                                                              'name': transport_name,
-                                                             'line': line_name}})
+                                                             'line': line_name},
+                                               'stations': stations})
         for key, value in departures.items():
             connections = {'destination': {'id': key, 'name': value[0]['destination']['name'],
                                            'lang': value[0]['destination']['lang']},
