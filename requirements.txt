@@ -2,3 +2,4 @@ python-dateutil
 falcon
 requests
 gunicorn
+pymongo
