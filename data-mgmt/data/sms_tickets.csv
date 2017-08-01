@@ -1,0 +1,55 @@
+locality,zone,sms_number,main_code,reduced_suffix,daypass_prefix,main_suffix,night_code
+
+Bulle,30,873,30,R,J,,
+Vuadens,30,873,30,R,J,,
+Riaz,30,873,30,R,J,,
+Morlon,30,873,30,R,J,,
+
+Fribourg,10,873,10,R,J,,
+Villars-sur-Glâne,10,873,10,R,J,,
+Givisiez,10,873,10,R,J,,
+Marly,10,873,10,R,J,,
+Granges-Paccot,10,873,10,R,J,,
+
+Genève,10,788,tpg,2,,1,
+Genève-Aéroport,10,788,tpg,2,,1,
+Carouge GE,10,788,tpg,2,,1,
+Veyrier,10,788,tpg,2,,1,
+Bernex,10,788,tpg,2,,1,
+Lancy,10,788,tpg,2,,1,
+Meyrin,10,788,tpg,2,,1,
+Chêne-Bourg,10,788,tpg,2,,1,
+Thônex,10,788,tpg,2,,1,
+Grand-Saconnex,10,788,tpg,2,,1,
+Vernier,10,788,tpg,2,,1,
+Onex,10,788,tpg,2,,1,
+Veigy,10,788,tpg,2,,1,
+Neydens,10,788,tpg,2,,1,
+Grand-Lancy,10,788,tpg,2,,1,
+Jussy,10,788,tpg,2,,1,
+Avusy,10,788,tpg,2,,1,
+Confignon,10,788,tpg,2,,1,
+Plan-les-Ouates,10,788,tpg,2,,1,
+Satigny,10,788,tpg,2,,1,
+Ferney,10,788,tpg,2,,1,
+La Plaine,10,788,tpg,2,,1,
+
+Lausanne,11,456,GL,R,J,,PYJTL
+Lausanne-Flon,11,456,GL,R,J,,PYJTL
+Prilly,12,456,GL,R,J,,PYJTL
+Lutry,12,456,GL,R,J,,PYJTL
+Pully,12,456,GL,R,J,,PYJTL
+Paudex,12,456,GL,R,J,,PYJTL
+Crissier,12,456,GL,R,J,,PYJTL
+Epalinges,12,456,GL,R,J,,PYJTL
+Renens VD,12,456,GL,R,J,,PYJTL
+St-Sulpice VD,12,456,GL,R,J,,PYJTL
+Ecublens VD,12,456,GL,R,J,,PYJTL
+Echichens,12,456,GL,R,J,,PYJTL
+Chavannes-p.-R.,12,456,GL,R,J,,PYJTL
+Chavannes-près-Renens,12,456,GL,R,J,,PYJTL
+
+Sion,1,454,Si1,r,,,
+Pont-de-la-Morge (Sion),2,454,Si2,r,,,
+Pont-de-la-Morge,2,454,Si2,r,,,
+Uvrier,2,454,Si2,r,,,
