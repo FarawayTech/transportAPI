@@ -1,3 +1,4 @@
+editdistance
 metaphone
 python-dateutil
 falcon
