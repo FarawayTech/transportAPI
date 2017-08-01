@@ -12,8 +12,36 @@ TIMEZONE = tz.gettz('Europe/Zurich')
 
 
 class SBBApi(Api):
+
     DEPARTURES_URL = 'https://api.opentransportdata.swiss/trias'
+    CONNECTIONS_URL = 'https://timetable.search.ch/api/route.json'
     NS = {'default': 'http://www.vdv.de/trias'}
+
+    def get_connections(self, origin: str, destination: str, time, limit: int):
+        query = {'from': origin, 'to': destination, 'num': limit, 'show_delays': 1}
+        result = requests.get(self.CONNECTIONS_URL, params=query).json()
+        connections = result['connections']
+        for connection in connections:
+            connection['sections'] = connection.pop('legs')
+            for sections in connection['sections']:
+                pass
+        return result
+
+    def get_departures(self, station_id, time: datetime):
+        time = time.astimezone(TIMEZONE)
+        request_xml = ElementTree.parse('providers/sbb/departures_request.xml').getroot()  # type: ElementTree.Element
+        # there is always only one
+        stop = request_xml.find(".//default:StopPointRef", self.NS)
+        stop.text = str(station_id)
+        dep_time = request_xml.find('.//default:DepArrTime', self.NS)
+        dep_time.text = time.strftime("%Y-%m-%dT%H:%M:%S")
+
+        request_xml_str = ElementTree.tostring(request_xml, encoding='utf-8', method='xml')
+        r = requests.post(self.DEPARTURES_URL, headers={'Content-Type': 'application/xml',
+                                                        'Authorization': SBB_API_KEY},
+                          data=request_xml_str)
+        r.encoding = 'utf-8'
+        return self._parse_response(ElementTree.fromstring(r.text))
 
     def _parse_response(self, response_xml: ElementTree.Element) -> dict:
         response = {'departures': []}
@@ -49,19 +77,3 @@ class SBBApi(Api):
                            'connections': value}
             response['departures'].append(connections)
         return response
-
-    def get_departures(self, station_id, time: datetime):
-        time = time.astimezone(TIMEZONE)
-        request_xml = ElementTree.parse('providers/sbb/departures_request.xml').getroot()  # type: ElementTree.Element
-        # there is always only one
-        stop = request_xml.find(".//default:StopPointRef", self.NS)
-        stop.text = str(station_id)
-        dep_time = request_xml.find('.//default:DepArrTime', self.NS)
-        dep_time.text = time.strftime("%Y-%m-%dT%H:%M:%S")
-
-        request_xml_str = ElementTree.tostring(request_xml, encoding='utf-8', method='xml')
-        r = requests.post(self.DEPARTURES_URL, headers={'Content-Type': 'application/xml',
-                                                        'Authorization': SBB_API_KEY},
-                          data=request_xml_str)
-        r.encoding = 'utf-8'
-        return self._parse_response(ElementTree.fromstring(r.text))
