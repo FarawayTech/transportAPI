@@ -8,7 +8,7 @@ def main_import():
     f = open('data-mgmt/data/sms_tickets.csv', 'r')
     reader = csv.reader(f)
 
-    headers = next(reader.next)
+    headers = next(reader)
     sms_locations = {}
 
     for row in reader:
