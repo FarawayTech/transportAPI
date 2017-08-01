@@ -3,6 +3,9 @@ import subprocess
 import re
 import unicodedata
 import logging
+
+import itertools
+from metaphone import doublemetaphone
 from pymongo import MongoClient
 import pymongo
 
@@ -55,6 +58,8 @@ def main_import():
 
         # synonyms, used in weighted matching
         station['synonyms'] = [station[syn_attr_name] for syn_attr_name in STATION_NAMES if station[syn_attr_name]]
+        station['metaphones'] = [s for s in set(itertools.chain(*(doublemetaphone(s) for s in station['synonyms'])))
+                                 if s != '']
 
         def recursive_prefixes(prefix_set, sequence):
             for i in range(1, len(sequence)):
