@@ -101,12 +101,13 @@ def main_import():
     temp_col = db['temp_stations']
     temp_col.insert(stations)
     logging.info("Creating indexes")
-    temp_col.ensure_index([("location", pymongo.GEOSPHERE)])
-    temp_col.ensure_index('stop_id')
-    temp_col.ensure_index('first_names')
-    temp_col.ensure_index('second_names')
-    temp_col.ensure_index('prefix_names')
-    temp_col.ensure_index('weight')
+    temp_col.create_index([("location", pymongo.GEOSPHERE)])
+    temp_col.create_index('stop_id')
+    temp_col.create_index('first_names')
+    temp_col.create_index('second_names')
+    temp_col.create_index('prefix_names')
+    temp_col.create_index('weight')
+    temp_col.create_index([('metaphones', pymongo.TEXT)], default_language='none')
 
     logging.info('Dropping old collection and renaming')
     if STATION_COL_NAME in db.collection_names():

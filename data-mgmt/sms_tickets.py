@@ -34,5 +34,5 @@ def main_import():
 
     db.sms_tickets.insert(sms_locations.values())
     logging.info("Creating indexes")
-    db.sms_tickets.ensure_index('localities.name')
+    db.sms_tickets.create_index('localities.name')
     client.close()

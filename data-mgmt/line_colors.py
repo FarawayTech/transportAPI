@@ -38,5 +38,5 @@ def main_import():
 
     db.line_colors.insert(locations.values())
     logging.info("Creating indexes")
-    db.line_colors.ensure_index([("location", pymongo.GEOSPHERE)])
+    db.line_colors.create_index([("location", pymongo.GEOSPHERE)])
     client.close()
