@@ -1,4 +1,5 @@
 import csv
+import os
 import subprocess
 import re
 import unicodedata
@@ -30,13 +31,13 @@ def main_import():
     print("Downloading stops file...", end="\t")
     subprocess.call(["curl http://gtfs.geops.ch/dl/complete/stops.txt > stops.csv"], shell=True)
     print("[OK]")
-    current_count = sum(1 for _ in open("temp_import/stops.csv"))
+    current_count = sum(1 for _ in open("stops.csv"))
     if current_count + 10 < prev_count:
         logging.error("New file contains %d stations less than the old one, aborting\t[FAIL]" % (prev_count - current_count))
     subprocess.call(["cat stops.csv | sort -r -k1,1 -t',' > stops_sorted.csv"], shell=True)
 
     logging.info("Converting to json")
-    f = open('temp_import/stops_sorted.csv')
+    f = open('stops_sorted.csv')
     reader = csv.reader(f)
 
     headers = reader.next()
@@ -114,3 +115,5 @@ def main_import():
         db.drop_collection(STATION_COL_NAME)
     temp_col.rename(STATION_COL_NAME)
     client.close()
+    os.remove("stops_sorted.csv")
+    os.remove("stops.csv")
