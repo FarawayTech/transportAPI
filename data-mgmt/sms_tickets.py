@@ -5,10 +5,10 @@ from pymongo import MongoClient
 
 def main_import():
     logging.info("Converting to json")
-    f = open('data/sms_tickets.csv')
+    f = open('data-mgmt/data/sms_tickets.csv', 'r')
     reader = csv.reader(f)
 
-    headers = reader.next()
+    headers = next(reader.next)
     sms_locations = {}
 
     for row in reader:

@@ -12,7 +12,6 @@ import pymongo
 
 
 def strip_accents(s):
-    s = s.decode('utf-8')
     return ''.join(c for c in unicodedata.normalize('NFD', s)
                    if unicodedata.category(c) != 'Mn')
 
@@ -25,13 +24,13 @@ STATION_COL_NAME = 'stations'
 
 def main_import():
     client = MongoClient()
-    db = client['temp']
+    db = client['test']
     prev_count = db[STATION_COL_NAME].count()
 
     print("Downloading stops file...", end="\t")
     subprocess.call(["curl http://gtfs.geops.ch/dl/complete/stops.txt > stops.csv"], shell=True)
     print("[OK]")
-    current_count = sum(1 for _ in open("stops.csv"))
+    current_count = sum(1 for _ in open("stops.csv", 'r'))
     if current_count + 10 < prev_count:
         logging.error("New file contains %d stations less than the old one, aborting\t[FAIL]" % (prev_count - current_count))
     subprocess.call(["cat stops.csv | sort -r -k1,1 -t',' > stops_sorted.csv"], shell=True)
@@ -40,7 +39,7 @@ def main_import():
     f = open('stops_sorted.csv')
     reader = csv.reader(f)
 
-    headers = reader.next()
+    headers = next(reader)
     stations = []
     station_ids = set()
 

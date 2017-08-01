@@ -2,6 +2,7 @@
 import logging
 from . import line_colors, sms_tickets, stations
 
+logging.basicConfig(level=logging.INFO)
 
 logging.info("Importing stations")
 stations.main_import()

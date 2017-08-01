@@ -6,10 +6,10 @@ import pymongo
 
 def main_import():
     logging.info("Converting to json")
-    f = open('data/line_colors.csv')
+    f = open('data-mgmt/data/line_colors.csv', 'r')
     reader = csv.reader(f)
 
-    headers = reader.next()
+    headers = next(reader)
     locations = {}
 
     for row in reader:
