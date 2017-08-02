@@ -47,8 +47,7 @@ class StationRepository:
         return stations
 
     def get(self, station_id: str):
-        s = self.station_db.find_one({'station_id': station_id})
+        s = self.station_db.find_one({'stop_id': station_id})
         if s is None:
             raise StationRepository.NotFoundException()
-        return Station(s['station_id'], s['synonyms'][0], GeoPoint(s['location']['coordinates'][1],
-                                                                   s['location']['coordinates'][0]))
+        return Station.from_dict(s)
