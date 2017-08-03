@@ -58,8 +58,8 @@ class LocationsResource:
         longitude = float(req.get_param('lon', required=True))
 
         limit = req.get_param_as_int('limit') or 10
-        resp.body = json.dumps([s.json() for s in self.station_repo.find_nearby_stations(GeoPoint(latitude, longitude),
-                                                                                         limit)])
+        stations = [s.json() for s in self.station_repo.find_nearby_stations(GeoPoint(latitude, longitude), limit)]
+        resp.body = json.dumps({'stations': stations})
 
 
 class StationsVoiceResource:
