@@ -73,7 +73,8 @@ class StationsVoiceResource:
         query = req.get_param('query', required=True)
 
         limit = req.get_param_as_int('limit') or 10
-        resp.body = json.dumps([s.json() for s in self.station_repo.find_sound_stations(query, limit)])
+        stations = [s.json() for s in self.station_repo.find_sound_stations(query, limit)]
+        resp.body = json.dumps({'stations': stations})
 
 
 app = falcon.API()
