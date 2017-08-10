@@ -55,7 +55,12 @@ class SBBApi(Api):
             destination_id = departure.find(".//default:DestinationStopPointRef", self.NS).text
             destination_lang = departure.find(".//default:DestinationText/default:Language", self.NS).text.lower()
 
-            line_name = departure.find(".//default:PublishedLineName/default:Text", self.NS).text  # can be empty for trains
+            # can be empty for trains
+            line_name = departure.find(".//default:PublishedLineName/default:Text", self.NS).text
+            departure_platform = departure.find(".//default:ThisCall//default:PlannedBay/default:Text", self.NS)
+            if departure_platform is not None:
+                departure_platform = departure_platform.text
+
 
             stations = []
             for station in departure.iterfind('.//default:OnwardCall', self.NS):
@@ -67,6 +72,7 @@ class SBBApi(Api):
                 stations.append({"name": station_name, "id": station_id, "platform": platform})
 
             departures[destination_id].append({'dep_time': dep_time,
+                                               'dep_platform': departure_platform,
                                                'destination': {'name': destination_name,
                                                                'lang': destination_lang,
                                                                'id': destination_id},
