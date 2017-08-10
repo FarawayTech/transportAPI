@@ -46,7 +46,7 @@ class SBBApi(Api):
         r.encoding = 'utf-8'
         return self._parse_response(ElementTree.fromstring(r.text), station)
 
-    def _parse_response(self, response_xml: ElementTree.Element, station: Station) -> Dict:
+    def _parse_response(self, response_xml: ElementTree.Element, origin: Station) -> Dict:
         response = {'departures': []}
         departures = defaultdict(list)
 
@@ -73,7 +73,7 @@ class SBBApi(Api):
                     platform = platform.text
                 stations.append({"name": station_name, "id": station_id, "platform": platform})
 
-            departures[destination_id].append({'departure': {'station': station.json(),
+            departures[destination_id].append({'departure': {'station': origin.json(),
                                                              'platform': departure_platform,
                                                              'arrival': None,
                                                              'arrivalTimestamp': None,

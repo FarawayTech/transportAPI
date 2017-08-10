@@ -43,7 +43,7 @@ class DeparturesResource:
         origin = self.station_repo.get(station_id)
         departures = api.get_departures(origin, dep_time)
         # add station
-        departures['station'] = origin
+        departures['station'] = origin.json()
         resp.body = json.dumps(departures)
 
 
@@ -85,5 +85,5 @@ app.add_route('/v1/stations/voice', StationsVoiceResource())
 app.add_route('/v1/connections', ConnectionsResource())
 
 if __name__ == '__main__':
-    httpd = simple_server.make_server('127.0.0.1', 8000, app)
+    httpd = simple_server.make_server('127.0.0.1', 8001, app)
     httpd.serve_forever()
