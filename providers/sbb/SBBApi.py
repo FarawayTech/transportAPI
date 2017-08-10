@@ -61,7 +61,9 @@ class SBBApi(Api):
             for station in departure.iterfind('.//default:OnwardCall', self.NS):
                 station_id = station.find(".//default:StopPointRef", self.NS).text
                 station_name = station.find(".//default:StopPointName/default:Text", self.NS).text
-                platform = station.find(".//default:PlannedBay/default:Text", self.NS).text
+                platform = station.find(".//default:PlannedBay/default:Text", self.NS)
+                if platform is not None:
+                    platform = platform.text
                 stations.append({"name": station_name, "id": station_id, "platform": platform})
 
             departures[destination_id].append({'dep_time': dep_time,
