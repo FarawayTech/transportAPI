@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
 
+from stations import Station
+
 
 class Api(ABC):
     @abstractmethod
-    def get_departures(self, station_id: str, time):
+    def get_departures(self, station: Station, time):
         pass
 
     @abstractmethod

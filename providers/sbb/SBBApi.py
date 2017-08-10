@@ -1,11 +1,14 @@
 import os
+from typing import Dict
+
 import requests
 from collections import defaultdict
-from dateutil import tz
+from dateutil import tz, parser
 from providers.Api import Api
 from xml.etree import ElementTree
 from datetime import datetime
 
+from stations import Station
 
 SBB_API_KEY = os.environ.get('SBB_API_KEY')
 TIMEZONE = tz.gettz('Europe/Zurich')
@@ -27,12 +30,12 @@ class SBBApi(Api):
                 pass
         return result
 
-    def get_departures(self, station_id, time: datetime):
+    def get_departures(self, station: Station, time: datetime) -> Dict:
         time = time.astimezone(TIMEZONE)
         request_xml = ElementTree.parse('providers/sbb/departures_request.xml').getroot()  # type: ElementTree.Element
         # there is always only one
         stop = request_xml.find(".//default:StopPointRef", self.NS)
-        stop.text = str(station_id)
+        stop.text = str(station.station_id)
         dep_time = request_xml.find('.//default:DepArrTime', self.NS)
         dep_time.text = time.strftime("%Y-%m-%dT%H:%M:%S")
 
@@ -41,9 +44,9 @@ class SBBApi(Api):
                                                         'Authorization': SBB_API_KEY},
                           data=request_xml_str)
         r.encoding = 'utf-8'
-        return self._parse_response(ElementTree.fromstring(r.text))
+        return self._parse_response(ElementTree.fromstring(r.text), station)
 
-    def _parse_response(self, response_xml: ElementTree.Element) -> dict:
+    def _parse_response(self, response_xml: ElementTree.Element, station: Station) -> Dict:
         response = {'departures': []}
         departures = defaultdict(list)
 
@@ -61,7 +64,6 @@ class SBBApi(Api):
             if departure_platform is not None:
                 departure_platform = departure_platform.text
 
-
             stations = []
             for station in departure.iterfind('.//default:OnwardCall', self.NS):
                 station_id = station.find(".//default:StopPointRef", self.NS).text
@@ -71,8 +73,12 @@ class SBBApi(Api):
                     platform = platform.text
                 stations.append({"name": station_name, "id": station_id, "platform": platform})
 
-            departures[destination_id].append({'dep_time': dep_time,
-                                               'dep_platform': departure_platform,
+            departures[destination_id].append({'departure': {'station': station.json(),
+                                                             'platform': departure_platform,
+                                                             'arrival': None,
+                                                             'arrivalTimestamp': None,
+                                                             'departure': dep_time,
+                                                             'departureTimestamp': int(parser.parse(dep_time).timestamp())},
                                                'destination': {'name': destination_name,
                                                                'lang': destination_lang,
                                                                'id': destination_id},

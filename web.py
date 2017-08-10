@@ -40,9 +40,10 @@ class DeparturesResource:
         limit = req.get_param_as_int('limit') or 10
         api = get_api(station_id)
 
-        departures = api.get_departures(station_id, dep_time)
+        origin = self.station_repo.get(station_id)
+        departures = api.get_departures(origin, dep_time)
         # add station
-        departures['station'] = self.station_repo.get(station_id).json()
+        departures['station'] = origin
         resp.body = json.dumps(departures)
 
 
