@@ -63,6 +63,28 @@ class LocationsResource:
         resp.body = json.dumps({'stations': stations})
 
 
+class StationsResource:
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.station_repo = StationRepository()
+
+    def on_get(self, req, resp):
+        """Handles GET requests"""
+        station_id = req.get_param('id')
+        query = req.get_param('query')
+
+        limit = req.get_param_as_int('limit') or 10
+        if station_id:
+            try:
+                stations = [self.station_repo.get(station_id).json()]
+            except StationRepository.NotFoundException:
+                stations = []
+        else:
+            stations = [s.json() for s in self.station_repo.find_stations(query, limit)]
+        resp.body = json.dumps({'stations': stations})
+
+
 class StationsVoiceResource:
 
     def __init__(self) -> None:
@@ -82,8 +104,9 @@ app = falcon.API()
 app.add_route('/v1/departures', DeparturesResource())
 app.add_route('/v1/locations', LocationsResource())
 app.add_route('/v1/stations/voice', StationsVoiceResource())
+app.add_route('/v1/stations', StationsResource())
 app.add_route('/v1/connections', ConnectionsResource())
 
 if __name__ == '__main__':
-    httpd = simple_server.make_server('127.0.0.1', 8001, app)
+    httpd = simple_server.make_server('127.0.0.1', 8000, app)
     httpd.serve_forever()

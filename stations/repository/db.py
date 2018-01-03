@@ -46,6 +46,11 @@ class StationRepository:
 
         return stations
 
+    def find_stations(self, query: str, limit: int):
+        stations = [Station.from_dict(s) for s in self.station_db.find({"first_names": query}).limit(limit)]
+
+        return stations
+
     def get(self, station_id: str):
         s = self.station_db.find_one({'stop_id': station_id})
         if s is None:
