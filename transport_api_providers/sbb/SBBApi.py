@@ -4,7 +4,7 @@ from typing import Dict
 import requests
 from collections import defaultdict
 from dateutil import tz, parser
-from providers.Api import Api
+from ..Api import Api
 from xml.etree import ElementTree
 from datetime import datetime
 

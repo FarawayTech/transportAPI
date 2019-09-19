@@ -4,13 +4,40 @@ import json
 from datetime import datetime
 from dateutil import tz
 
-from providers import get_api
+from transport_api_providers import get_api
+from weather_api import get_api as get_weather_api
 from stations import GeoPoint
 from stations.repository.db import StationRepository
 
 
+class WeatherResource:
+
+    def on_get(self, req, resp):
+        """Handles GET requests"""
+        lat = req.get_param('lat', required=True)
+        lon = req.get_param('lon', required=True)
+        location = GeoPoint(lat, lon)
+
+        api = get_weather_api()
+
+        resp.body = json.dumps(api.get_forecast(location))
+
+
+class UVIResource:
+
+    def on_get(self, req, resp):
+        """Handles GET requests"""
+        lat = req.get_param('lat', required=True)
+        lon = req.get_param('lon', required=True)
+        location = GeoPoint(lat, lon)
+
+        api = get_weather_api()
+
+        resp.body = json.dumps(api.get_uv_index(location))
+
+
 class ConnectionsResource:
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__()
         self.station_repo = StationRepository()
 
@@ -100,12 +127,17 @@ class StationsVoiceResource:
         resp.body = json.dumps({'stations': stations})
 
 
+# TRANSPORT
 app = falcon.API()
 app.add_route('/v1/departures', DeparturesResource())
 app.add_route('/v1/locations', LocationsResource())
 app.add_route('/v1/stations/voice', StationsVoiceResource())
 app.add_route('/v1/stations', StationsResource())
 app.add_route('/v1/connections', ConnectionsResource())
+
+# WEATHER
+app.add_route('/v1/weather/forecast', WeatherResource())
+app.add_route('/v1/weather/uvi', UVIResource())
 
 if __name__ == '__main__':
     httpd = simple_server.make_server('127.0.0.1', 8000, app)
