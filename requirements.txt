@@ -5,3 +5,4 @@ falcon
 requests
 gunicorn
 pymongo
+google-cloud-texttospeech
