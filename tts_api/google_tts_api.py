@@ -41,7 +41,7 @@ class GoogleTTSApi(BaseTTSApi):
         # Select the type of audio file you want returned
         audio_config = texttospeech.types.AudioConfig(
             audio_encoding=texttospeech.enums.AudioEncoding.MP3,
-            speaking_rate='1.1')
+            speaking_rate=1.1)
 
         # Perform the text-to-speech request on the text input with the selected
         # voice parameters and audio file type

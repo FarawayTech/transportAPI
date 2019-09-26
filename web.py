@@ -6,8 +6,21 @@ from dateutil import tz
 
 from transport_api_providers import get_api
 from weather_api import get_api as get_weather_api
+from tts_api import get_api as get_tts_api
 from stations import GeoPoint
 from stations.repository.db import StationRepository
+
+weather_api = get_weather_api()
+tts_api = get_tts_api()
+
+
+class TTSResource:
+
+    def on_get(self, req, resp):
+        text = req.get_param("text", required=True)
+        api_response = tts_api.get_voice_mp3(text)
+        resp.data = api_response.audio_content
+        resp.content_type = "audio/mpeg"
 
 
 class WeatherResource:
@@ -18,9 +31,7 @@ class WeatherResource:
         lon = req.get_param('lon', required=True)
         location = GeoPoint(lat, lon)
 
-        api = get_weather_api()
-
-        resp.body = json.dumps(api.get_forecast(location))
+        resp.body = json.dumps(weather_api.get_forecast(location))
 
 
 class UVIResource:
@@ -31,9 +42,7 @@ class UVIResource:
         lon = req.get_param('lon', required=True)
         location = GeoPoint(lat, lon)
 
-        api = get_weather_api()
-
-        resp.body = json.dumps(api.get_uv_index(location))
+        resp.body = json.dumps(weather_api.get_uv_index(location))
 
 
 class ConnectionsResource:
@@ -138,6 +147,9 @@ app.add_route('/v1/connections', ConnectionsResource())
 # WEATHER
 app.add_route('/v1/weather/forecast', WeatherResource())
 app.add_route('/v1/weather/uvi', UVIResource())
+
+# TTS
+app.add_route('/v1/tts', TTSResource())
 
 if __name__ == '__main__':
     httpd = simple_server.make_server('127.0.0.1', 8000, app)
