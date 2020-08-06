@@ -32,7 +32,7 @@ class WeatherResource:
         resp.body = json.dumps(weather_api.get_forecast(location))
 
 
-class UVIResource:
+class UVIForecastResource:
     def on_get(self, req, resp):
         """Handles GET requests"""
         lat = req.get_param("lat", required=True)
@@ -40,6 +40,16 @@ class UVIResource:
         location = GeoPoint(lat, lon)
 
         resp.body = json.dumps(weather_api.get_uvi_forecast(location))
+
+
+class UVIResource:
+    def on_get(self, req, resp):
+        """Handles GET requests"""
+        lat = req.get_param("lat", required=True)
+        lon = req.get_param("lon", required=True)
+        location = GeoPoint(lat, lon)
+
+        resp.body = json.dumps(weather_api.get_uvi(location))
 
 
 class ConnectionsResource:
@@ -146,7 +156,8 @@ app.add_route("/v1/connections", ConnectionsResource())
 
 # WEATHER
 app.add_route("/v1/weather/forecast", WeatherResource())
-app.add_route("/v1/weather/uvi", UVIResource())
+app.add_route("/v1/weather/uvi/forecast", UVIForecastResource())
+app.add_route("/v1/weather/uvi/", UVIResource())
 
 # TTS
 app.add_route("/v1/tts", TTSResource())
