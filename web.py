@@ -39,7 +39,7 @@ class UVIResource:
         lon = req.get_param("lon", required=True)
         location = GeoPoint(lat, lon)
 
-        resp.body = json.dumps(weather_api.get_uv_index(location))
+        resp.body = json.dumps(weather_api.get_uvi_forecast(location))
 
 
 class ConnectionsResource:
