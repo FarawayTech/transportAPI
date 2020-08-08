@@ -6,12 +6,14 @@ from dateutil import tz
 
 from transport_api_providers import get_api
 from weather_api import get_api as get_weather_api
+from uvi_api import get_api as get_uvi_api
 from tts_api import get_api as get_tts_api
 from stations import GeoPoint
 from stations.repository.db import StationRepository
 
 weather_api = get_weather_api()
 tts_api = get_tts_api()
+uvi_api = get_uvi_api()
 
 
 class TTSResource:
@@ -39,7 +41,7 @@ class UVIForecastResource:
         lon = req.get_param("lon", required=True)
         location = GeoPoint(lat, lon)
 
-        resp.body = json.dumps(weather_api.get_uvi_forecast(location))
+        resp.body = json.dumps(uvi_api.get_uvi_forecast(location))
 
 
 class UVIResource:
@@ -49,7 +51,7 @@ class UVIResource:
         lon = req.get_param("lon", required=True)
         location = GeoPoint(lat, lon)
 
-        resp.body = json.dumps(weather_api.get_uvi(location))
+        resp.body = json.dumps(uvi_api.get_uvi(location))
 
 
 class ConnectionsResource:
