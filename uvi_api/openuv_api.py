@@ -14,13 +14,19 @@ class OpenUVApi(BaseUVIApi):
     UVI_URL = "https://api.openuv.io/api/v1/uv"
 
     def get_uvi_forecast(self, location: GeoPoint):
-        headers = {'x-access-token': API_KEY}
-        query = {'lat': location.latitude, 'lng': location.longitude}
-        result = requests.get(self.UVI_FORECAST_URL, params=query, headers=headers).json()
+        headers = {"x-access-token": API_KEY}
+        query = {"lat": location.latitude, "lng": location.longitude}
+        result = requests.get(
+            self.UVI_FORECAST_URL, params=query, headers=headers
+        ).json()
         return result
 
     def get_uvi(self, location: GeoPoint):
-        headers = {'x-access-token': API_KEY}
-        query = {'lat': location.latitude, 'lng': location.longitude}
+        headers = {"x-access-token": API_KEY}
+        query = {"lat": location.latitude, "lng": location.longitude}
         result = requests.get(self.UVI_URL, params=query, headers=headers).json()
-        return result
+        return self._current_uvi_to_default(result)
+
+    @staticmethod
+    def _current_uvi_to_default(result: dict):
+        return result["result"]
