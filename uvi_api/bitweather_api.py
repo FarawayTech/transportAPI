@@ -8,7 +8,7 @@ from . import BaseUVIApi
 API_KEY = os.environ.get("BITWEATHER_API_KEY")
 
 
-class OpenUVApi(BaseUVIApi):
+class BitWeatherApi(BaseUVIApi):
 
     UVI_FORECAST_URL = "https://api.weatherbit.io/v2.0/forecast/daily"
     UVI_URL = "https://api.weatherbit.io/v2.0/current"

@@ -1,6 +1,6 @@
 from .api import BaseUVIApi
-from .openuv_api import OpenUVApi
+from .bitweather_api import BitWeatherApi
 
 
 def get_api() -> BaseUVIApi:
-    return OpenUVApi()
+    return BitWeatherApi()
