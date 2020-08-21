@@ -1,9 +1,8 @@
 editdistance
 metaphone
-dnspython
 python-dateutil
 falcon
 requests
 gunicorn
-pymongo>=3.5.0
+pymongo[srv]>=3.5.0
 google-cloud-texttospeech
