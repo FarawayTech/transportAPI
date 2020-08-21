@@ -5,4 +5,4 @@ falcon
 requests
 gunicorn
 pymongo[srv]>=3.5.0
-google-cloud-texttospeech
+google-cloud-texttospeech==1.0.1
