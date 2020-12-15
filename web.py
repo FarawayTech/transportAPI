@@ -24,14 +24,23 @@ class TTSResource:
         resp.content_type = "audio/mpeg"
 
 
-class WeatherResource:
+class WeatherHourlyResource:
     def on_get(self, req, resp):
         """Handles GET requests"""
         lat = req.get_param("lat", required=True)
         lon = req.get_param("lon", required=True)
         location = GeoPoint(lat, lon)
 
-        resp.body = json.dumps(weather_api.get_forecast(location))
+        resp.body = json.dumps(weather_api.get_hourly_forecast(location))
+
+class WeatherDailyResource:
+    def on_get(self, req, resp):
+        """Handles GET requests"""
+        lat = req.get_param("lat", required=True)
+        lon = req.get_param("lon", required=True)
+        location = GeoPoint(lat, lon)
+
+        resp.body = json.dumps(weather_api.get_daily_forecast(location))
 
 
 class UVIForecastResource:
@@ -157,7 +166,8 @@ app.add_route("/v1/stations", StationsResource())
 app.add_route("/v1/connections", ConnectionsResource())
 
 # WEATHER
-app.add_route("/v1/weather/forecast", WeatherResource())
+app.add_route("/v1/weather/forecast/hourly", WeatherHourlyResource())
+app.add_route("/v1/weather/forecast/daily", WeatherDailyResource())
 app.add_route("/v1/weather/uvi/forecast", UVIForecastResource())
 app.add_route("/v1/weather/uvi/", UVIResource())
 
