@@ -34,7 +34,7 @@ class OpenWeatherApi(BaseWeatherApi):
                 intensity = 1.25
             else:
                 main_type = "thunder"
-        elif "5" in main_type:
+        elif "5" in main_codes:
             main_type = "rain"
             if weather_codes.intersection({"500", "520"}):
                 intensity = 0.3
