@@ -157,8 +157,31 @@ class StationsVoiceResource:
         resp.body = json.dumps({"stations": stations})
 
 
+class RequireJSON(object):
+
+    def process_request(self, req, resp):
+        if not req.client_accepts_json:
+            raise falcon.HTTPNotAcceptable(
+                'This API only supports responses encoded as JSON.',
+                href='http://docs.examples.com/api/json')
+
+        if req.method in ('POST', 'PUT'):
+            if 'application/json' not in req.content_type:
+                raise falcon.HTTPUnsupportedMediaType(
+                    'This API only supports requests encoded as JSON.',
+                    href='http://docs.examples.com/api/json')
+
+
+class CORSOrigin(object):
+
+    def process_response(self, req, resp, resource):
+        resp.append_header("Access-Control-Allow-Origin", "*")
+
+
 # TRANSPORT
-app = falcon.API()
+app = falcon.API(middleware=[
+    RequireJSON(), CORSOrigin()
+])
 app.add_route("/v1/departures", DeparturesResource())
 app.add_route("/v1/locations", LocationsResource())
 app.add_route("/v1/stations/voice", StationsVoiceResource())
