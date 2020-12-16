@@ -93,7 +93,7 @@ class OpenWeatherApi(BaseWeatherApi):
             classes.append("hot")
 
         # get name
-        name = ", ".join(sorted(set(w["description"] for w in forecast_dict["weather"])))
+        name = ", ".join(sorted(set(w["description"].title() for w in forecast_dict["weather"])))
 
         return {"type": main_type, "classes": classes, "intensity": intensity, "name": name}
 
