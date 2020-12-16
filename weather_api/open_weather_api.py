@@ -91,7 +91,11 @@ class OpenWeatherApi(BaseWeatherApi):
             classes.append("cold")
         if is_hot:
             classes.append("hot")
-        return {"type": main_type, "classes": classes, "intensity": intensity}
+
+        # get name
+        name = ", ".join(sorted(set(w["description"] for w in forecast_dict["weather"])))
+
+        return {"type": main_type, "classes": classes, "intensity": intensity, "name": name}
 
     def get_hourly_forecast(self, location: GeoPoint):
         query = {
