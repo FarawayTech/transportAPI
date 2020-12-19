@@ -118,4 +118,5 @@ class OpenWeatherApi(BaseWeatherApi):
         result = requests.get(self.DAILY_FORECAST_URL, params=query).json()
         for d in result["daily"]:
             d["ui_params"] = OpenWeatherApi._get_ui_config(d, d["temp"]["day"])
+        result["current"]["ui_params"] = OpenWeatherApi._get_ui_config(result["current"], result["current"]["temp"])
         return result
